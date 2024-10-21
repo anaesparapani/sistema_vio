@@ -51,19 +51,19 @@ nav ul {
 }
 
 /* Estilo de cada item da lista de navegação */
-nav ul li {
+nav ul li2 {
   margin: 0 15px; /* Espaçamento horizontal entre os itens */
 }
 
 /* Estilo dos links de navegação */
-nav ul li a {
+nav ul li2 a {
   color: white; /* Cor do texto dos links */
   text-decoration: none; /* Remove o sublinhado dos links */
   font-weight: bold; /* Texto em negrito */
 }
 
 /* Estilo ao passar o mouse sobre os links */
-nav ul li a:hover {
+nav ul li2 a:hover {
   text-decoration: underline; /* Adiciona sublinhado ao passar o mouse */
 }
 
@@ -104,6 +104,15 @@ main section {
   flex: 1; /* Faz com que os itens se ajustem dinamicamente */
 }
 
+li {
+    background-color: #afd8de; /* Cor de fundo branca */
+    border: 1px solid #ffffff; /* Borda cinza clara */
+    padding: 10px; /* Espaçamento interno */
+    width: 50%;
+    flex: 1; 
+    text-align: center;
+    list-style: none;
+}
 /* Estilo do rodapé */
 footer {
   background-color: #333; /* Cor de fundo escura */
