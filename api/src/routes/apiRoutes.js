@@ -9,8 +9,8 @@ const router = require('express').Router()
 
  const organizadorController = require("../controllers/organizadorController")
 
- router.post('/organizador', organizadorController.createOrganizador);
-// router.get('/organizador', organizadorController.getAllOrganizador);
+router.post('/organizador', organizadorController.createOrganizador);
+router.get('/organizador', organizadorController.getAllOrganizador);
 // router.put('/organizador', organizadorController.updateOrganizador);
 // router.delete('/organizador/:id', organizadorController.deleteOrganizador);
 
