@@ -1,40 +1,35 @@
 const connect = require("../db/connect");
-let organizadores = [];
-let id_organizadores = 0;
 module.exports = class organizadorController {
   static async createOrganizador(req, res) {
     const { nome, email, senha, telefone } = req.body;
 
     if (!nome || !email || !senha || !telefone) {
-      //Verifica se todos os campos estão preenchidos
       return res
         .status(400)
         .json({ error: "Todos os campos devem ser preenchidos" });
-    } else if (isNaN(telefone) || telefone.length !== 11) {
-      //Verifica se tem só números e se tem 11 dígitos
-      return res
-        .status(400)
-        .json({
-          error: "Telefone inválido. Deve conter exatamente 11 dígitos numéricos",
-        });
     } else if (!email.includes("@")) {
-      //Verifica se o email tem o @
-      return res.status(400).json({ error: "Email inválido. Deve conter @" });
-    }
-
-    else {
-      const query = `INSERT INTO organizador (nome, email, senha, telefone) VALUES('${nome}','${email}','${senha}','${telefone}')`;
+      return res.status(400).json({ error: "Email inválido." });
+    } else if (isNaN(telefone) || telefone.length !== 11) {
+      return res.status(400).json({
+        error: "Número inválido. Deve conter exatamente 11 dígitos numéricos",
+      });
+    } else {
+      // Construção da query INSERT
+      const query = `INSERT INTO usuario (cpf, password, email, name) VALUES('${cpf}', '${password}', '${email}', '${name}')`;
+      // Executando a query criada
       try {
         connect.query(query, function (err) {
           if (err) {
+            console.log(err);
+            console.log(err.code);
             if (err.code === "ER_DUP_ENTRY") {
-              return res.status(400).json({
-                error: "O email já esta vinculado a outro orgaizador",
-              });
+              return res
+                .status(400)
+                .json({ error: "O Email já está vinculado a outro usuário" });
             } else {
-              return res.status(400).json({
-                error: "Erro interno do servidor",
-              });
+              return res
+                .status(500)
+                .json({ error: "Erro interno do servidor" });
             }
           } else {
             return res
@@ -44,16 +39,29 @@ module.exports = class organizadorController {
         });
       } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: "Erro interno do servidor" });
+        res.status(500).json({ error: "Erro interno do servidor" });
       }
     }
   }
 
-  static async getAllOrganizadores(req, res) {
-    //Lista todos os usuarios
-    return res
-      .status(200)
-      .json({ message: "Obtendo todos os Organizadores", organizadores }); //200 significa sucesso
+  static async getAllOrganizador(req, res) {
+    const query = "SELECT * FROM organizador";
+
+    try {
+      connect.query(query, function (err, results) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: "Erro interno do Servidor" });
+        }
+
+        return res
+          .status(200)
+          .json({ message: "Lista de organizador", organizador: results });
+      });
+    } catch (error) {
+      console.error("Erro ao executar consulta:", error);
+      return res.status(500).json({ error: "Erro interno no servidor" });
+    }
   }
 
   static async updateOrganizador(req, res) {
@@ -66,37 +74,55 @@ module.exports = class organizadorController {
         .status(400)
         .json({ error: "Todos os campos devem ser preenchidos" });
     }
-    // Procurar o indice do organizador no Array 'organizadores' pelo id
-    const organizadorIndex = organizadores.findIndex((organizador) => organizador.id === id);
+    const query = `UPDATE organizador SET nome=?,email=?,senha=?,telefone=? WHERE id_organizador = ?`;
+    const values = [nome, email, senha, telefone, id];
 
-    // Se o organizador não for encontrado organizadorIndex equivale a -1
-    if (organizadorIndex === -1) {
-      return res.status(400).json({ error: "Organizador não encontrado" });
+    try {
+      connect.query(query, values, function (err, results) {
+        if (err) {
+          if (err.code === "ER_DUP_ENTRY") {
+            return res
+              .status(400)
+              .json({ error: "Email já cadastrado por outro organizador" });
+          } else {
+            console.error(err);
+            return res.status(500).json({ error: "Erro interno do servidor" });
+          }
+        }
+        if (results.affectedRows === 0) {
+          return res.status(404).json({ error: "Organizador não encontrado" });
+        }
+        return res
+          .status(200)
+          .json({ message: "Organizador atualizado com sucesso" });
+      });
+    } catch (error) {
+      console.error("Erro ao executar consulta", error);
+      return res.status(500).json({ error: "Erro interno no servidor" });
     }
-
-    // Atualiza os dados do organizador do Array 'organizadores'
-    organizadores[organizadorIndex] = { id, nome, email, senha, telefone };
-
-    return res
-      .status(200)
-      .json({ message: "Organizador atualizado", organizador: organizadores[organizadorIndex] });
   }
 
   static async deleteOrganizador(req, res) {
-    // Obtém o parâmetro 'id' da requisição, que é o id do organizador a ser deletado
     const organizadorId = req.params.id;
+    const query = `DELETE FROM organizador WHERE id_organizador=?`;
+    const values = [organizadorId];
+    try {
+      connect.query(query, values, function (err, results) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: "Erro interno no servidor" });
+        }
+        if (results.affectedRows === 0) {
+          return res.status(404).json({ error: "Organizador não encontrado" });
+        }
 
-    // Procurar o indice do organizador no Array 'organizadores' pelo email
-    const organizadorIndex = organizadores.findIndex((organizador) => organizador.id == organizadorId);
-
-    // Se o usuário não for encontrado organizadorIndex equivale a -1
-    if (organizadorIndex === -1) {
-      return res.status(400).json({ error: "Organizador não encontrado" });
+        return res.status(200).json({
+          message: "Organizador excluido com sucesso",
+        });
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Erro interno no servidor" });
     }
-
-    //Removendo o usuário do Array 'organizadores'
-    organizadores.splice(organizadorIndex, 1);
-
-    return res.status(200).json({message: "Organizador Apagado"});
   }
 };
