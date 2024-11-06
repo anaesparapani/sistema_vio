@@ -9,7 +9,7 @@ const corsOptions = {
   credentials: true, //Permite o uso de cookies e credenciais
   optionSuccessStatus: 204, //Define o status de resposta para o método OPTIONS
 };
-//Inicia o servidor na porta 5000, tornando a API acessível em http://localhost:5000
+//Inicia o servidor na porta 5000, tornando a API acessível em http://10.89.240.64:5000
 //Aplicando o middlewares CORS no app
 app.use(cors(corsOptions));
 app.listen(5000);
