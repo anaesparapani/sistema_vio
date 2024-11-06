@@ -14,4 +14,13 @@ router.get("/organizador", organizadorController.getAllOrganizador);
 router.put("/organizador", organizadorController.updateOrganizador);
 router.delete("/organizador/:id", organizadorController.deleteOrganizador);
 
+const eventoController = require('../controllers/eventoController');
+
+//rotas eventoController
+router.post('/evento', eventoController.createEvento);
+router.get('/evento', eventoController.getAllEventos);
+router.put('/evento', eventoController.updateEvento);
+// router.delete('/evento/:id', eventoController.deleteEvento);
+
+
 module.exports = router;
