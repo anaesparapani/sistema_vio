@@ -22,7 +22,7 @@ router.get('/evento', eventoController.getAllEventos);
 router.put('/evento', eventoController.updateEvento);
 router.delete('/evento/:id', eventoController.deleteEvento);
 router.get('/evento/data', eventoController.getEventosPorData);
-router.get('/evento/proximo', eventoController.getEventosProximos);
+router.get('/evento/proximo', eventoController.getEventosdia);
 
 const ingressoController = require("../controllers/ingressoController");
 
