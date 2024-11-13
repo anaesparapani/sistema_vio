@@ -21,6 +21,8 @@ router.post('/evento', eventoController.createEvento);
 router.get('/evento', eventoController.getAllEventos);
 router.put('/evento', eventoController.updateEvento);
 router.delete('/evento/:id', eventoController.deleteEvento);
+router.get('/evento/data', eventoController.getEventosPorData);
+router.get('/evento/proximo', eventoController.getEventosProximos);
 
 const ingressoController = require("../controllers/ingressoController");
 
