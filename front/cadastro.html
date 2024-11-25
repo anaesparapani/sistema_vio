@@ -58,15 +58,20 @@
           <label for="senha">Senha:</label>
           <input type="password" id="senha" name="senha" required />
 
+          <!--Entrada da data de nascimento-->
+          <label for="data">Data de nascimento</label>
+          <input type="date" id="data" name="data" required />
+
           <!--Botão para enviar o formulário-->
           <input type="submit" value="Cadastrar" />
         </form>
       </section>
-      <!--<section id="cadastro_users">-->
-        <!--Lista para exibir os usuários cadastrados-->
-        <!--<h2>Usuários Cadastrados</h2>
+      
+      <section id="cadastro_users">
+        Lista para exibir os usuários cadastrados
+        <h2>Usuários Cadastrados</h2>
         <ul id="user-list"></ul>
-      </section>-->
+      </section>
 
       <section>
         <h2>Usuários Cadastrados via tabela</h2>
@@ -75,6 +80,7 @@
             <th>Nome</th>
             <th>CPF</th>
             <th>E-mail</th>
+            <th>Data de Nascimento</th>
           </thead>
 
           <tbody id="user-list-tabela">
