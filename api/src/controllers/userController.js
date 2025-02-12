@@ -2,9 +2,9 @@ const connect = require("../db/connect");
 
 module.exports = class userController {
   static async createUser(req, res) {
-    const { cpf, email, password, name } = req.body;
+    const { cpf, email, password, name, data_nascimento} = req.body;
 
-    if (!cpf || !email || !password || !name) {
+    if (!cpf || !email || !password || !name ||!data_nascimento) {
       //Verifica se todos os campos estão preenchidos
       return res
         .status(400)
@@ -19,7 +19,7 @@ module.exports = class userController {
       return res.status(400).json({ error: "Email inválido. Deve conter @" });
     } else {
       // Construção da query INSERT
-      const query = `INSERT INTO usuario (cpf, password, email, name) VALUES('${cpf}', '${password}', '${email}', '${name}')`;
+      const query = `INSERT INTO usuario (cpf, password, email, name, data_nascimento) VALUES('${cpf}', '${password}', '${email}', '${name}', '${data_nascimento}')`;
       // Executando a query criada
       try {
         connect.query(query, function (err) {
@@ -128,5 +128,41 @@ module.exports = class userController {
       console.error(error);
       return res.status(500).json({ error: "Erro interno no servidor" });
     }
+  }
+
+  //Método de Login 
+  static async loginUser(req, res){
+    const {email, password} = req.body
+
+    if(!email || !password){
+      return res.status(400).json({error:"Email e senha são obrigatórios"})
+    }
+
+    const query = `SELECT * FROM usuario WHERE email = ?`
+
+    try {
+      connect.query(query,[email],(err,results) =>{
+        if(err){
+          console.log(err);
+          return res.status(500).json({error:"Erro interno no servidor"})
+        }
+
+        if(results.length===0){
+          return res.status(404).json({error:"Usuário não encontrado"})
+        }
+        const user = results[0];
+
+        if(user.password !== password){
+          return res.status(403).json({error:"Senha incorreta"})
+        }
+
+        return res.status(200).json({message:"Login bem sucedido", user})
+
+      })
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({error:"Erro interno no servidor"})
+    }
+
   }
 };
