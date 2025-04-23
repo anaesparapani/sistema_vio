@@ -29,6 +29,7 @@ const ingressoController = require("../controllers/ingressoController");
 
 //rotas ingressoController
 router.post('/ingresso', ingressoController.createIngresso);
+router.get('/ingresso/evento/:id', ingressoController.getByIdEvento);
 router.get('/ingresso', ingressoController.getAllIngresos);
 router.put('/ingresso', ingressoController.updateIngresso);
 router.delete('/ingresso/:id', ingressoController.deleteIngresso);
