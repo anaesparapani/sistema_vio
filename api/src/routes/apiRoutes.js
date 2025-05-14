@@ -20,11 +20,11 @@ const eventoController = require('../controllers/eventoController');
 
 //rotas eventoController
 router.post('/evento', eventoController.createEvento);
-router.get('/evento', eventoController.getAllEventos);
+router.get('/evento', verifyJWT,eventoController.getAllEventos);
 router.put('/evento', eventoController.updateEvento);
 router.delete('/evento/:id', eventoController.deleteEvento);
-router.get('/evento/data', eventoController.getEventosPorData);
-router.get('/evento/proximo', eventoController.getEventosdia);
+router.get('/evento/data', verifyJWT,eventoController.getEventosPorData);
+router.get('/evento/proximo', verifyJWT,eventoController.getEventosdia);
 
 const ingressoController = require("../controllers/ingressoController");
 
