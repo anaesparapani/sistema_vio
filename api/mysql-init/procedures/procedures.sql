@@ -21,6 +21,8 @@ insert into ingresso_compra (fk_id_compra, fk_id_ingresso, quantidade)
 end; //
 delimiter ;
 
+CALL registrar_compra(1, 10, 1);
+
 
 delimiter //
 
