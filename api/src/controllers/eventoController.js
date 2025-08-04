@@ -4,6 +4,7 @@ module.exports = class eventoController {
   //criação de um evento
   static async createEvento(req, res) {
     const { nome, descricao, data_hora, local, fk_id_organizador } = req.body;
+    const imagem = req.file?.buffer || null;
 
     //validação genérica de todos os atributos
     if (!nome || !descricao || !data_hora || !local || !fk_id_organizador) {
@@ -12,8 +13,15 @@ module.exports = class eventoController {
         .json({ error: "Todos os campos devem ser prenchidos!" });
     }
 
-    const query = `insert into evento (nome, descricao, data_hora, local, fk_id_organizador) values (?,?,?,?,?)`;
-    const values = [nome, descricao, data_hora, local, fk_id_organizador];
+    const query = `insert into evento (nome, descricao, data_hora, local, fk_id_organizador, imagem) values (?,?,?,?,?,?)`;
+    const values = [
+      nome,
+      descricao,
+      data_hora,
+      local,
+      fk_id_organizador,
+      imagem,
+    ];
     try {
       connect.query(query, values, (err) => {
         if (err) {
@@ -188,7 +196,7 @@ module.exports = class eventoController {
   }
 
   //Mostra os eventos que acontecem em tal dia e nos proximos 7
-    static async getEventosdia(req, res) {
+  static async getEventosdia(req, res) {
     const dataRecebida = req.params.data;
 
     // Converte a data recebida em um objeto Date
@@ -216,5 +224,18 @@ module.exports = class eventoController {
       console.error(err);
       return res.status(500).json({ error: "Erro ao buscar eventos" });
     }
+  }
+
+  static async getImagemEvento(req, res) {
+    const id = req.params.id;
+
+    const query = "SELECT imagem FROM evento WHERE id_evento=?";
+    connect.query(query, [id], (err, results) => {
+      if (err || results.length === 0 || results[0].imagem) {
+        return res.status(404).send("Imagem não foi encontrada");
+      }
+      res.set("Content-Type", "imagem/png");
+      res.send(results[0].imagem);
+    });
   }
 };
