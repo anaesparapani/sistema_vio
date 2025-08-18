@@ -12,7 +12,7 @@ function verifyJWT(req, res, next) {
   jwt.verify(token, process.env.SECRET, (err, decoded) => {
     if (err) {
       return res
-        .status(403)
+        .status(403) // token inválido
         .json({ auth: false, message: "Falha na autenticação do Token" });
     }
     req.userId = decoded.id;
