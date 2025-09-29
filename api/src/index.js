@@ -1,6 +1,8 @@
 const express = require("express"); //Importa o módulo Express
 const cors = require("cors");
-require("dotenv-safe").config(); //Solicita o dotenv - verifica se os arquivos ".env" e ".env.example" estão iguais
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv-safe").config();
+}
 const jwt = require("jsonwebtoken"); //Carregando as configurações do jsonwebtoken
 const testConnect = require("./db/testConnect");
 
